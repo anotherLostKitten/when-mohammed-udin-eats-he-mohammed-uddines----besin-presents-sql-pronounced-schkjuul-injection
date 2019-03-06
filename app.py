@@ -1,6 +1,7 @@
 from urllib import request, parse
 import json
 import sqlite3
+from string import ascii_letters,digits
 from os import urandom
 from random import randint
 
@@ -35,6 +36,11 @@ def login():
 def registerr():
     if request.method=="GET" or "username" not in request.form:
         return redirect("/")
+    if"users"==request.form["username"]or not all(i in(ascii_letters+digits)for i in request.form["username"]):
+        flash("Username must be strictly alphanumeric.")
+        return redirect("/")
+    #things things things TODO
+    return redirect("/schkjuul")
 
 def logcheck(u,p):
     return p==squul.execute("SELECT password FROM users WHERE username = ?;", (u,)).fetchone()[0]
