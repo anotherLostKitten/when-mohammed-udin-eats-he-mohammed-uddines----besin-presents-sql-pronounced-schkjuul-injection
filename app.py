@@ -21,17 +21,20 @@ def home():
         return redirect("/schkjuul")
     return render_template("home.html")
 
-@app.route("/schkjuul",methods=["GET","POST"])
+@app.route("/schkjuul",methods=["POST"])
 def login():
     if not "user" in session:
-        if request.method=="GET" or "username" not in request.form:
+        if"username"not in request.form:
             return redirect("/")
         if not logcheck(request.form["username"],request.form["password"]):
             flash("Username or password is the not good.")
             return redirect("/")
         session["user"]=request.form["username"]
-        
-    return render_template("sql.html", sqltable=usersql("username"), userinf=userinf(session["user"])))
+    try:
+        sl=int(request.form["slide_location"])
+    except TypeError:
+        sl=0
+    return render_template("sql.html", sqltable=usersql("username"), userinf=userinf(session["user"]),slide_location=sl)
 @app.route("/registerr",methods=["GET","POST"])
 def registerr():
     if request.method=="GET" or "username" not in request.form:

@@ -1,23 +1,51 @@
 {% extends "base.html" %}
 
-{% block title %}present{% endblock %}
+{% block title %}{{userinf[1]}}'s Sql{% endblock %}
 
 {% block body %}
+<div class="container">
+  <div class="row">
+	<div class="col-4 col-md-3">
+	  <div id="userinf">
+		<div id="userinf">Username: {{userinf[1]}}</div>
+		<div id="passinf">Password: {{userinf[2]}}</div>
+		<a href="/logout" id="logout">Logout</a>
+	  </div>
+	  <hr>
+	  <form action="/login">
+		<input type="hidden" name="slide_location" value="{{slide_location}}">
+		<input type="text"  name="sql_user" placeholder="username">
+		<input type="text"  name="sql_pass" placeholder="password">
+		<input type="submit" name="auth" value="Log In">
+	  </form>
 
-{% for i in userinf %}
-<p> username: {{i[0]}} </p>
-<p> password: {{i[1]}} </p>
-{% endfor %}
-
-<table>
-  <tr> <th> user id </th> <th> username </th> <th> password </th> </tr>
-  {% for i in sqltable %}
-    <tr> <td> {{i[0]}} </td>
-         <td> {{i[1]}} </td>
-         <td> {{i[2]}} </td>
-    </tr>
-  {% endfor %}
-</table>
-
-
+	</div>
+	<div class="col-8 col-md-7">
+	  <div>
+		<table id="sqltable">
+		  <tr><th>User ID</th><th>Username</th><th>Password</th></tr>
+		  {% for i in sqltable %}
+		  <tr>
+			<td>{{i[0]}}</td>
+			<td>{{i[1]}}</td>
+			<td>{{i[2]}}</td>
+		  </tr>
+		  {% endfor %}
+		</table>
+	  </div>
+	</div>
+  </div>
+  <div class="row align-items-center">
+	<div class="col-1">
+	  <img id="pres_left" src="{{url_for('static',filename='left.png')}}">
+	</div>
+	<div class="col-10 col-md-8">
+	  <img id="pres">
+	</div>
+	<div class="col-1">
+	  <img id="pres_right" src="{{url_for('static',filename='right.png')}}">
+	</div>
+  </div>
+</div>
+<script type="text/js" src="{{url_for('static',filename='notreally.js'}}"></script>
 {% endblock %}
