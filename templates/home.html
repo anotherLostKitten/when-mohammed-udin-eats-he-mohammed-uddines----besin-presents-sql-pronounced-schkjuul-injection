@@ -7,12 +7,12 @@
 <button id="loginry">login</button>
 <div id="loggy">
   <h4>Login:</h4>
-  <form action="/login">
+  <form action="/schkjuul" method="post">
 	<input type="text"  name="user" placeholder="username">
 	<input type="text"  name="pass" placeholder="password">
 	<input type="submit" name="auth" value="Log In">
   </form>
 </div>
 
-<script src="{{url_for('static',filename='doesitmatter.js'}}"></script>
+<script src="{{url_for('static',filename='doesitmatter.js')}}"></script>
 {% endblock %}
