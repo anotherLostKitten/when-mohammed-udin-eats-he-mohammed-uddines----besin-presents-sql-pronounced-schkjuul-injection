@@ -34,20 +34,24 @@ def login():
     return render_template("sql.html",sqltable=usersql("user"),userinf=tmp)
 @app.route("/registerr",methods=["GET","POST"])
 def registerr():
-    if request.method=="GET"or"user"not in request.form or"pass"not in request.form:
-        return redirect("/")
-    if"users"==request.form["user"]or not all(i in(ascii_letters+digits)for i in request.form["user"]):
+#    if "user"not in request.form or"pass"not in request.form:
+#        return redirect("/")
+    print(request.form["user"])
+    if "users"==request.form["user"]or not all(i in(ascii_letters+digits)for i in request.form["user"]):
         flash("User must be strictly alphanumeric.")
         return redirect("/")
     db=sqlite3.connect("util/users.db")
     squul=db.cursor()
     squul.execute("INSERT INTO users VALUES(?, ?, ?);",(squul.execute("SELECT COUNT(*) FROM users;").fetchone[0],request.form["user"],request.form["pass"]))
-    squul.commit()
+    db.commit()
     db.close()
     usersqlify(request.form["user"])
     return redirect("/schkjuul")
 def logcheck(u,p,squul):
-    return p==squul.execute("SELECT pass FROM users WHERE user = ?;",(u,)).fetchone()[0]
+    try:
+        return p==squul.execute("SELECT pass FROM users WHERE user = ?;",(u,)).fetchone()[0]
+    except TypeError:
+        return False
 def userinf(u,squul):
     return squul.execute("SELECT * FROM users WHERE user = ?;",(u,)).fetchone()
 def usersql(u):
@@ -65,7 +69,7 @@ def usersqlify(u):
     nusquul.execute("INSERT INTO users VALUES(?, ?, ?);",(1,"AzureLobster","NmherYbofgre"))
     nusquul.execute("INSERT INTO users VALUES(?, ?, ?);",(2,"BidOOF","OvqBBS"))
     nusquul.execute("INSERT INTO users VALUES(?, ?, ?);",(3,"Discord Admin","Qvfpbeq Nqzva"))
-    nusquul.commit()
+    nudeb.commit()
     nudeb.close()
 def reset():
     db=sqlite3.connect("util/users.db")
@@ -77,6 +81,7 @@ def reset():
         pass
     squul.execute("DROP TABLE IF EXISTS users;")
     squul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
+#    squul.execute("INSERT INTO users VALUES(?, ?, ?)",(0,"bbb","bbb",))
     db.commit()
     db.close()
 if __name__=="__main__":
