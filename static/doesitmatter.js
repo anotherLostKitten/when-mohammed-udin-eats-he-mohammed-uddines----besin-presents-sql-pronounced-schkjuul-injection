@@ -1,11 +1,11 @@
 var formy=document.getElementById("loggy");
 
 var switcherooR=(e)=>{
-  formy.innerHTML="<h4>Register:</h4><form action=\"/registerr\"><input type=\"text\"  name=\"user\" placeholder=\"username\"><input type=\"text\"  name=\"pass\" placeholder=\"password\"><input type=\"submit\" name=\"regi\" value=\"Register\"></form>";
+  formy.innerHTML="<h4>Register:</h4><form action=\"/registerr\" method=\"POST\"><input type=\"text\"  name=\"user\" placeholder=\"username\"><input type=\"text\"  name=\"pass\" placeholder=\"password\"><input type=\"submit\" name=\"regi\" value=\"Register\"></form>";
 };
 
 var switcherooL=(e)=>{
-  formy.innerHTML="<h4>Login:</h4>  <form action=\"/schkjuul\"> <input type=\"text\" name=\"user\" placeholder=\"username\"> <input type=\"text\"  name=\"pass\" placeholder=\"password\">  <input type=\"submit\" name=\"auth\" value=\"Log In\"></form>";
+  formy.innerHTML="<h4>Login:</h4>  <form action=\"/schkjuul\" method=\"POST\"> <input type=\"text\" name=\"user\" placeholder=\"username\"> <input type=\"text\"  name=\"pass\" placeholder=\"password\">  <input type=\"submit\" name=\"auth\" value=\"Log In\"></form>";
 };
 
 

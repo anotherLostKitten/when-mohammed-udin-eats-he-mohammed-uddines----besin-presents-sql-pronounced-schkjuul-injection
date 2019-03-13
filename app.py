@@ -24,28 +24,35 @@ def login():
             flash("User or pass is the not good.")
             return redirect("/")
         session["user"]=request.form["user"]
-    try:
-        sl=int(request.form["slide_location"])
-    except TypeError:
-        sl=0
-    return render_template("sql.html", sqltable=usersql("user"), userinf=userinf(session["user"]),slide_location=sl)
+    sl=0
+    if"slide_location"in request.form:
+        try:
+            sl=int(request.form["slide_location"])
+        except TypeError:
+            pass
     tmp=userinf(session["user"],squul)
     db.close()
-    return render_template("sql.html",sqltable=usersql("user"),userinf=tmp)
+    return render_template("sql.html",sqltable=usersql(session["user"]),userinf=tmp)
 @app.route("/registerr",methods=["GET","POST"])
 def registerr():
-#    if "user"not in request.form or"pass"not in request.form:
-#        return redirect("/")
-    print(request.form["user"])
+    print(request.form)
+    if "user"not in request.form or"pass"not in request.form:
+        return redirect("/")
+    print(request.form)
     if "users"==request.form["user"]or not all(i in(ascii_letters+digits)for i in request.form["user"]):
         flash("User must be strictly alphanumeric.")
         return redirect("/")
     db=sqlite3.connect("util/users.db")
     squul=db.cursor()
-    squul.execute("INSERT INTO users VALUES(?, ?, ?);",(squul.execute("SELECT COUNT(*) FROM users;").fetchone[0],request.form["user"],request.form["pass"]))
+    if userinf(request.form["user"],squul)!=None:
+        flash("User already exists.")
+        db.close()
+        return redirect("/")
+    squul.execute("INSERT INTO users VALUES(?, ?, ?);",(squul.execute("SELECT COUNT(*) FROM users;").fetchone()[0],request.form["user"],request.form["pass"]))
     db.commit()
     db.close()
     usersqlify(request.form["user"])
+    session["user"]=request.form["user"]
     return redirect("/schkjuul")
 def logcheck(u,p,squul):
     try:
@@ -57,11 +64,14 @@ def userinf(u,squul):
 def usersql(u):
     nudeb=sqlite3.connect("util/"+u+".db")
     nusquul=nudeb.cursor()
-    b=nusquul.execute("SELECT * FROM sql;").fetchall()
+    b=nusquul.execute("SELECT * FROM users;").fetchall()
     nudeb.close()
     return b
 def usersqlify(u):
-    remove("util/"+u+".db")
+    try:
+        remove("util/"+u+".db")
+    except FileNotFoundError:
+        pass
     nudeb=sqlite3.connect("util/"+u+".db")
     nusquul=nudeb.cursor()
     nusquul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
@@ -75,13 +85,15 @@ def reset():
     db=sqlite3.connect("util/users.db")
     squul=db.cursor()
     try:
-        for i in squul.execute("SELECT user FROM IF EXISTS users;").fetchall():
-            remove("util/"+i[0]+".db")
+        for i in squul.execute("SELECT user FROM users;").fetchall():
+            try:
+                remove("util/"+i[0]+".db")
+            except FileNotFoundError:
+                pass
     except sqlite3.OperationalError:
         pass
     squul.execute("DROP TABLE IF EXISTS users;")
     squul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
-#    squul.execute("INSERT INTO users VALUES(?, ?, ?)",(0,"bbb","bbb",))
     db.commit()
     db.close()
 if __name__=="__main__":
