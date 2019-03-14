@@ -7,22 +7,25 @@
   <div class="row">
 	<div class="col-4 col-md-3">
 	  <div id="userinf">
-		<div id="userinf">Username: {{userinf[1]}}</div>
-		<div id="passinf">Password: {{userinf[2]}}</div>
-		<a href="/logout" id="logout">Logout</a>
+		<div id="userinf"><strong>Username:</strong> {{userinf[1]}}</div>
+		<div id="passinf"><strong>Password:</strong> {{userinf[2]}}</div>
+		<div style="text-align:right;"><a href="/logout" id="logout">Logout</a></div>
 	  </div>
 	  <hr>
-	  <form action="/schkjuul" method="post">
-		<input type="hidden" name="slide_location" value="{{slide_location}}">
-		<input type="text"  name="sql_user" placeholder="username">
-		<input type="text"  name="sql_pass" placeholder="password">
-		<input type="submit" name="auth" value="Log In">
+	  <br>
+	  <h4><strong>SQL Injectable Login</strong></h4>
+	  <form action="/schkjuul" method="post" style="text-align:right;">
+		<input type="text" style="width:100%" name="sql_user" placeholder="Username">
+		<br>
+		<br>
+		<input type="text" style="width:100%" name="sql_pass" placeholder="Password">
+		<br><br>
+		<input type="submit" name="auth" class="btn btn-primary" value="Log In">
 	  </form>
-
 	</div>
 	<div class="col-8 col-md-7">
 	  <div>
-		<table id="sqltable">
+		<table class="table" id="sqltable">
 		  <tr><th>User ID</th><th>Username</th><th>Password</th></tr>
 		  {% for i in sqltable %}
 		  <tr>
@@ -33,17 +36,6 @@
 		  {% endfor %}
 		</table>
 	  </div>
-	</div>
-  </div>
-  <div class="row align-items-center">
-	<div class="col-1">
-	  <img id="pres_left" src="{{url_for('static',filename='left.png')}}" width="50px">
-	</div>
-	<div class="col-10 col-md-8">
-	  <img id="pres">
-	</div>
-	<div class="col-1">
-	  <img id="pres_right" src="{{url_for('static',filename='right.png')}}" width="50px">
 	</div>
   </div>
 </div>
