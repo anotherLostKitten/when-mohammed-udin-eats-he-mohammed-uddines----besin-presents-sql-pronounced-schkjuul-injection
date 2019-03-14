@@ -24,25 +24,35 @@ def login():
             flash("User or pass is the not good.")
             return redirect("/")
         session["user"]=request.form["user"]
-    sl=0
-    if"slide_location"in request.form:
-        try:
-            sl=int(request.form["slide_location"])
-        except ValueError:
-            pass
     tmp=userinf(session["user"],squul)
     db.close()
     u = session["user"]
-    db = sqlite3.connect("util/"+u+".db")
-    c = db.cursor()
     if "sql_user" in request.form:
+        nudeb=sqlite3.connect("util/"+u+".db")
+        nusquul=nudeb.cursor()
         user = request.form["sql_user"]
         pwd = request.form["sql_pass"]
-        if pwd == c.executescript('SELECT pass FROM users WHERE user = "' + user + '";' ).fetchone()[0]:
-            flash("login success")
-        else:
-            flash("login fail")
+        try:
+            try:
+                ulog = nusquul.execute('SELECT user FROM users WHERE user = "' + user + '" AND pass = "' + pwd + '";').fetchone()
+                if ulog!=None:
+                    flash("Logged in as "+ulog[0]+"!")
+                else:
+                    flash("Bad username or password")
+            except sqlite3.Warning:
+                flash("Sql operations did not return a value")
+                nusquul.executescript('SELECT user FROM users WHERE user = "' + user + '" AND pass = "' + pwd + '";')
+        except sqlite3.OperationalError:
+            flash("Sql operational error")
+        nudeb.commit()
+        nudeb.close()
     return render_template("sql.html",sqltable=usersql(session["user"]),userinf=tmp)
+@app.route("/resetudb")
+def rdbuthingbazinga():
+    if "user" in session:
+        usersqlify(session["user"])
+        flash("Database reset")
+    return redirect("/schkjuul")
 @app.route("/logout")
 def logout():
     if 'user' in session:
@@ -79,7 +89,10 @@ def userinf(u,squul):
 def usersql(u):
     nudeb=sqlite3.connect("util/"+u+".db")
     nusquul=nudeb.cursor()
-    b=nusquul.execute("SELECT * FROM users;").fetchall()
+    try:
+        b=nusquul.execute("SELECT * FROM users;").fetchall()
+    except sqlite3.OperationalError:
+        b=None
     nudeb.close()
     return b
 def usersqlify(u):
@@ -108,7 +121,7 @@ def reset():
     except sqlite3.OperationalError:
         pass
     squul.execute("DROP TABLE IF EXISTS users;")
-    squul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
+    squul.execute("CREATE TABLE users (userid INTEGER, user TEXT, pass TEXT);")
     db.commit()
     db.close()
 if __name__=="__main__":

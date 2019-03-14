@@ -13,20 +13,23 @@
 	  </div>
 	  <hr>
 	  <br>
-	  <h4><strong>SQL Injectable Login</strong></h4>
+	  <h4>SQL injectable login</h4>
 	  <form action="/schkjuul" method="post" style="text-align:right;">
 		<input type="text" style="width:100%" name="sql_user" placeholder="Username">
 		<br>
 		<br>
 		<input type="text" style="width:100%" name="sql_pass" placeholder="Password">
 		<br><br>
+		<a href="/resetudb" class="btn btn-danger">Reset Database</a>
 		<input type="submit" name="auth" class="btn btn-primary" value="Log In">
 	  </form>
 	</div>
 	<div class="col-8 col-md-7">
 	  <div>
+		{% if sqltable != None %}
+		<div style="text-align:center;"><h1><strong>Users</strong></h1></div>
 		<table class="table" id="sqltable">
-		  <tr><th>User ID</th><th>Username</th><th>Password</th></tr>
+		  <tr><th>userid</th><th>user</th><th>pass</th></tr>
 		  {% for i in sqltable %}
 		  <tr>
 			<td>{{i[0]}}</td>
@@ -35,9 +38,13 @@
 		  </tr>
 		  {% endfor %}
 		</table>
+		{% endif %}
+		
 	  </div>
 	</div>
   </div>
 </div>
+<br><hr><br>
+<div style="text-align:center;font-family:monospace;"><h4><strong>'SELECT user FROM users WHERE user = "' + user + '" AND pass = "' + pwd + '";'</strong></h4></div>
 <script type="text/js" src="{{url_for('static',filename='notreally.js')}}"></script>
 {% endblock %}
