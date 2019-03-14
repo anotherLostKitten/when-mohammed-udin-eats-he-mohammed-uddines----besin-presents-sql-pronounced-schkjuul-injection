@@ -15,7 +15,7 @@ def home():
     return render_template("home.html")
 @app.route("/schkjuul",methods=["GET","POST"])
 def login():
-    db=sqlite3.connect("util/users.db")
+    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
     squul=db.cursor()
     if not"user"in session:
         if request.method=="GET"or"user"not in request.form or"pass"not in request.form:
@@ -33,7 +33,7 @@ def login():
     tmp=userinf(session["user"],squul)
     db.close()
     u = session["user"]
-    db = sqlite3.connect("util/"+u+".db")
+    db = sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
     c = db.cursor()
     if "sql_user" in request.form:
         user = request.form["sql_user"]
@@ -57,7 +57,7 @@ def registerr():
     if "users"==request.form["user"]or not all(i in(ascii_letters+digits)for i in request.form["user"]):
         flash("User must be strictly alphanumeric.")
         return redirect("/")
-    db=sqlite3.connect("util/users.db")
+    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
     squul=db.cursor()
     if userinf(request.form["user"],squul)!=None:
         flash("User already exists.")
@@ -77,17 +77,17 @@ def logcheck(u,p,squul):
 def userinf(u,squul):
     return squul.execute("SELECT * FROM users WHERE user = ?;",(u,)).fetchone()
 def usersql(u):
-    nudeb=sqlite3.connect("util/"+u+".db")
+    nudeb=sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
     nusquul=nudeb.cursor()
     b=nusquul.execute("SELECT * FROM users;").fetchall()
     nudeb.close()
     return b
 def usersqlify(u):
     try:
-        remove("util/"+u+".db")
+        remove("/var/www/sql-inject/sql-inject/util/"+u+".db")
     except FileNotFoundError:
         pass
-    nudeb=sqlite3.connect("util/"+u+".db")
+    nudeb=sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
     nusquul=nudeb.cursor()
     nusquul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
     nusquul.execute("INSERT INTO users VALUES(?, ?, ?);",(0,"Mohammed Uddin","Zbunzzrq Hqqva"))
@@ -97,12 +97,12 @@ def usersqlify(u):
     nudeb.commit()
     nudeb.close()
 def reset():
-    db=sqlite3.connect("util/users.db")
+    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
     squul=db.cursor()
     try:
         for i in squul.execute("SELECT user FROM users;").fetchall():
             try:
-                remove("util/"+i[0]+".db")
+                remove("/var/www/sql-inject/sql-inject/util/"+i[0]+".db")
             except FileNotFoundError:
                 pass
     except sqlite3.OperationalError:
