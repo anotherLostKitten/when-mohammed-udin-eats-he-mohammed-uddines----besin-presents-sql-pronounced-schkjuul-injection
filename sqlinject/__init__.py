@@ -15,7 +15,7 @@ def home():
     return render_template("home.html")
 @app.route("/schkjuul",methods=["GET","POST"])
 def login():
-    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
+    db=sqlite3.connect("/var/www/sqlinject/sqlinject/util/users.db")
     squul=db.cursor()
     if not"user"in session:
         if request.method=="GET"or"user"not in request.form or"pass"not in request.form:
@@ -24,25 +24,35 @@ def login():
             flash("User or pass is the not good.")
             return redirect("/")
         session["user"]=request.form["user"]
-    sl=0
-    if"slide_location"in request.form:
-        try:
-            sl=int(request.form["slide_location"])
-        except ValueError:
-            pass
     tmp=userinf(session["user"],squul)
     db.close()
     u = session["user"]
-    db = sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
-    c = db.cursor()
     if "sql_user" in request.form:
+        nudeb=sqlite3.connect("/var/www/sqlinject/sqlinject/util/"+u+".db")
+        nusquul=nudeb.cursor()
         user = request.form["sql_user"]
         pwd = request.form["sql_pass"]
-        if pwd == c.executescript('SELECT pass FROM users WHERE user = "' + user + '";' ).fetchone()[0]:
-            flash("login success")
-        else:
-            flash("login fail")
+        try:
+            try:
+                ulog = nusquul.execute('SELECT user FROM users WHERE user = "' + user + '" AND pass = "' + pwd + '";').fetchone()
+                if ulog!=None:
+                    flash("Logged in as "+ulog[0]+"!")
+                else:
+                    flash("Bad username or password")
+            except sqlite3.Warning:
+                flash("Sql operations did not return a value")
+                nusquul.executescript('SELECT user FROM users WHERE user = "' + user + '" AND pass = "' + pwd + '";')
+        except sqlite3.OperationalError:
+            flash("Sql operational error")
+        nudeb.commit()
+        nudeb.close()
     return render_template("sql.html",sqltable=usersql(session["user"]),userinf=tmp)
+@app.route("/resetudb")
+def rdbuthingbazinga():
+    if "user" in session:
+        usersqlify(session["user"])
+        flash("Database reset")
+    return redirect("/schkjuul")
 @app.route("/logout")
 def logout():
     if 'user' in session:
@@ -57,7 +67,7 @@ def registerr():
     if "users"==request.form["user"]or not all(i in(ascii_letters+digits)for i in request.form["user"]):
         flash("User must be strictly alphanumeric.")
         return redirect("/")
-    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
+    db=sqlite3.connect("/var/www/sqlinject/sqlinject/util/users.db")
     squul=db.cursor()
     if userinf(request.form["user"],squul)!=None:
         flash("User already exists.")
@@ -77,17 +87,20 @@ def logcheck(u,p,squul):
 def userinf(u,squul):
     return squul.execute("SELECT * FROM users WHERE user = ?;",(u,)).fetchone()
 def usersql(u):
-    nudeb=sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
+    nudeb=sqlite3.connect("/var/www/sqlinject/sqlinject/util/"+u+".db")
     nusquul=nudeb.cursor()
-    b=nusquul.execute("SELECT * FROM users;").fetchall()
+    try:
+        b=nusquul.execute("SELECT * FROM users;").fetchall()
+    except sqlite3.OperationalError:
+        b=None
     nudeb.close()
     return b
 def usersqlify(u):
     try:
-        remove("/var/www/sql-inject/sql-inject/util/"+u+".db")
+        remove("/var/www/sqlinject/sqlinject/util/"+u+".db")
     except FileNotFoundError:
         pass
-    nudeb=sqlite3.connect("/var/www/sql-inject/sql-inject/util/"+u+".db")
+    nudeb=sqlite3.connect("/var/www/sqlinject/sqlinject/util/"+u+".db")
     nusquul=nudeb.cursor()
     nusquul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
     nusquul.execute("INSERT INTO users VALUES(?, ?, ?);",(0,"Mohammed Uddin","Zbunzzrq Hqqva"))
@@ -97,21 +110,22 @@ def usersqlify(u):
     nudeb.commit()
     nudeb.close()
 def reset():
-    db=sqlite3.connect("/var/www/sql-inject/sql-inject/util/users.db")
+    db=sqlite3.connect("/var/www/sqlinject/sqlinject/util/users.db")
     squul=db.cursor()
     try:
         for i in squul.execute("SELECT user FROM users;").fetchall():
             try:
-                remove("/var/www/sql-inject/sql-inject/util/"+i[0]+".db")
+                remove("/var/www/sqlinject/sqlinject/util/"+i[0]+".db")
             except FileNotFoundError:
                 pass
     except sqlite3.OperationalError:
         pass
     squul.execute("DROP TABLE IF EXISTS users;")
-    squul.execute("CREATE TABLE users (userid INTEGER PRIMARY KEY, user TEXT, pass TEXT);")
+    squul.execute("CREATE TABLE users (userid INTEGER, user TEXT, pass TEXT);")
     db.commit()
     db.close()
 if __name__=="__main__":
     reset()
     app.debug=True
     app.run()
+reset()
