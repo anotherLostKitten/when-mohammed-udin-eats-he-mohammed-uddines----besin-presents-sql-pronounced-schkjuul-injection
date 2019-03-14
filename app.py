@@ -28,11 +28,26 @@ def login():
     if"slide_location"in request.form:
         try:
             sl=int(request.form["slide_location"])
-        except TypeError:
+        except ValueError:
             pass
     tmp=userinf(session["user"],squul)
     db.close()
+    u = session["user"]
+    db = sqlite3.connect("util/"+u+".db")
+    c = db.cursor()
+    if "sql_user" in request.form:
+        user = request.form["sql_user"]
+        pwd = request.form["sql_pass"]
+        if pwd == c.executescript('SELECT pass FROM users WHERE user = "' + user + '";' ).fetchone()[0]:
+            flash("login success")
+        else:
+            flash("login fail")
     return render_template("sql.html",sqltable=usersql(session["user"]),userinf=tmp)
+@app.route("/logout")
+def logout():
+    if 'user' in session:
+        session.pop('user')
+    return redirect("/")
 @app.route("/registerr",methods=["GET","POST"])
 def registerr():
     print(request.form)
