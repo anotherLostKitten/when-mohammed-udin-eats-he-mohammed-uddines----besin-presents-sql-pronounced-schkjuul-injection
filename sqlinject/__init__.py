@@ -7,7 +7,8 @@ from os import urandom,remove
 from random import randint
 from flask import Flask,render_template,request,flash,redirect,url_for,make_response,Request,session
 app=Flask(__name__)
-app.secret_key=urandom(32)
+with open("/var/www/sqlinject/sqlinject/secret.txt","rb")as f:
+    app.secret_key=f.read()
 @app.route("/")
 def home():
     if "user"in session:
@@ -124,8 +125,12 @@ def reset():
     squul.execute("CREATE TABLE users (userid INTEGER, user TEXT, pass TEXT);")
     db.commit()
     db.close()
+
 if __name__=="__main__":
     reset()
     app.debug=True
     app.run()
+
 reset()
+
+
