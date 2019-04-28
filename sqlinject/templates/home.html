@@ -50,22 +50,19 @@
        and the input is parsed by the SQL driver. The driver sanitizes the input, preventing the input from editing
        the executed SQL query itself. This is safer than constructing the SQL query string and inserting the input.</p>
     <img src="images/sqlinject8.png">
-    <p>Preventing SQL injections is not very difficult, and there are various methods that can be used to prevent them:
-      <ul>
-       <li>The user input could be restricted to alphanumeric characters and parsed through, preventing the use of quotations
-           to construct another query to be executed.</li>
-       <li>Error messages could be hidden in try/except blocks, preventing the attacker from finding out information
-           about the database.</li>
-       <li>The input could be parameterized, preventing an attacker from editing the SQL query string itself.</li>
-       <li>Dynamic SQL could be avoided when possible, which would prevent an attacker from SQL injection because
-           there would be no input.</li>
-      </ul>
-    <p>
+    <p>Preventing SQL injections is not very difficult, and there are various methods that can be used to prevent them:</p>
+    <p>The user input could be restricted to alphanumeric characters and parsed through, preventing the use of quotations
+       to construct another query to be executed.</p>
+    <p>Error messages could be hidden in try/except blocks, preventing the attacker from finding out information
+       about the database.</p>
+    <p>The input could be parameterized, preventing an attacker from editing the SQL query string itself.</p>
+    <p>Dynamic SQL could be avoided when possible, which would prevent an attacker from SQL injection because
+       there would be no input.</p>
     <img src="images/sqlinject9.png">
     <p>You can log on below to test out SQL injections for yourself<p>
     <p>That's all folks</p>
     <img src="images/sqlinject10.png">
-    <p><em>This website url is http://azurelobster.jumpingcrab.com/ (for that one person who asked)</em></p>
+    <p><em>This website url is <a href="http://azurelobster.jumpingcrab.com/">http://azurelobster.jumpingcrab.com/</a> (for that one person who asked)</em></p>
   </div>
   </div>
   <div class="row">
