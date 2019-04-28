@@ -14,42 +14,42 @@
 <div class="container">
   <div class="row">
   <div class="col-2" style="text-align:center;">
-    <img src="../images/sqlinject00" class="rounded">
-    <img src="../images/sqlinject01" class="rounded">
+    <img src="../images/sqlinject00">
+    <img src="../images/sqlinject01">
     <p><em>pronounced schkjuul</em></p>
     <h4>What is a SQL Injection?</h4>
     <p>A SQL Injection is a type of attack that uses malicious SQL queries to manipulate databases
        and access information not meant to be displayed.</p>
     <p>Before we go more into depth on SQL injections, lets take a little test. The image below contains
        four different ways to execute SQL queries. Which of the following methods is safest?</p>
-    <img src="../images/sqlinject1" class="rounded">
+    <img src="../images/sqlinject1">
     <br>
     <p>The correct answer is choice 3</p>
-    <img src="../images/sqlinject2" class="rounded">
+    <img src="../images/sqlinject2">
     <p>Choices 1 and 2 are unsafe because the user input is inserted directly into the SQL query, allowing the user
        to mess with the input and create a perfectly valid, yet malicious, SQL query to be executed.
        Choice 4 should not be done because it misses the point of using a database.
        Choice 3 uses a parameterized query that sanitizes the input, preventing the user from messing
        with the database.</p>
-    <img src="../images/sqlinject3" class="rounded">
+    <img src="../images/sqlinject3">
     <p>In the above image, the user input is directly inserted into the SQL query, and the query executed
        the query will be executed along with the user's malicious insertions.<p>
     <p>While the above examples don't show the attacker targetting anything in particular, if the attacker
        included more details in their input, they could access more specific information in the database.
        The attacker can intentionally cause errors to find out more information about the database.
        The image below shows how an attacker could specifically access Mohammed Uddin's data.</p>
-    <img src="../images/sqlinject4" class="rounded">
+    <img src="../images/sqlinject4">
     <p>SQL injections are very common and have been pulled off successfully many times on things ranging from
        spam bots to government sites.</p>
-    <img src="../images/sqlinject6" class="rounded">
-    <img src="../images/sqlinject7" class="rounded">
+    <img src="../images/sqlinject6">
+    <img src="../images/sqlinject7">
     <p>The image above contains example SQL queries. The malicious user inputs that are part of the SQL injection
        have been highlighted</p>
     <br>
     <p>Parameterizing user inputs protects against SQL injections because the input is seperate from the query string
        and the input is parsed by the SQL driver. The driver sanitizes the input, preventing the input from editing
        the executed SQL query itself. This is safer than constructing the SQL query string and inserting the input.</p>
-    <img src="../images/sqlinject8" class="rounded">
+    <img src="../images/sqlinject8">
     <p>Preventing SQL injections is not very difficult, and there are various methods that can be used to prevent them:
       <ul>
        <li>The user input could be restricted to alphanumeric characters and parsed through, preventing the use of quotations
@@ -61,10 +61,10 @@
            there would be no input.</li>
       </ul>
     <p>
-    <img src="../images/sqlinject9" class="rounded">
+    <img src="../images/sqlinject9">
     <p>You can log on below to test out SQL injections for yourself<p>
     <p>That's all folks</p>
-    <img src="../images/sqlinject10" class="rounded">
+    <img src="../images/sqlinject10">
     <p><em>This website url is http://azurelobster.jumpingcrab.com/ (for that one person who asked)</em></p>
   </div>
   </div>
